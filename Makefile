@@ -17,7 +17,7 @@ clean:
 tags:
 	ctags *.[ch]pp
 
-${MAIN}: ${MAIN}.o cmdline.o graph/loading.o graph/network.o graph/graph.o graph/weights.o graph/bloom.o
+${MAIN}: ${MAIN}.o cmdline.o graph/loading.o graph/network.o graph/graph.o graph/weights.o graph/bloom.o graph/stats.o
 
 cmdline.c.FORCE:      
 	# remake cmdline.c . But it's OK unless you change the .ggo file. You'll need gengetopt(1) to be able to run this.

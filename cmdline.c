@@ -28,14 +28,16 @@ const char *gengetopt_args_info_usage = "Usage: filter_nodes_and_edges [OPTIONS]
 const char *gengetopt_args_info_description = "";
 
 const char *gengetopt_args_info_help[] = {
-  "  -h, --help       Print help and exit",
-  "  -V, --version    Print version and exit",
-  "      --stringIDs  string IDs in the input  (default=off)",
+  "  -h, --help            Print help and exit",
+  "  -V, --version         Print version and exit",
+  "      --stringIDs       string IDs in the input  (default=off)",
+  "      --max_degree=INT  *delete* nodes with too high a degree  (default=`-1')",
     0
 };
 
 typedef enum {ARG_NO
   , ARG_FLAG
+  , ARG_INT
 } cmdline_parser_arg_type;
 
 static
@@ -57,12 +59,15 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->help_given = 0 ;
   args_info->version_given = 0 ;
   args_info->stringIDs_given = 0 ;
+  args_info->max_degree_given = 0 ;
 }
 
 static
 void clear_args (struct gengetopt_args_info *args_info)
 {
   args_info->stringIDs_flag = 0;
+  args_info->max_degree_arg = -1;
+  args_info->max_degree_orig = NULL;
   
 }
 
@@ -74,6 +79,7 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->help_help = gengetopt_args_info_help[0] ;
   args_info->version_help = gengetopt_args_info_help[1] ;
   args_info->stringIDs_help = gengetopt_args_info_help[2] ;
+  args_info->max_degree_help = gengetopt_args_info_help[3] ;
   
 }
 
@@ -155,6 +161,7 @@ static void
 cmdline_parser_release (struct gengetopt_args_info *args_info)
 {
   unsigned int i;
+  free_string_field (&(args_info->max_degree_orig));
   
   
   for (i = 0; i < args_info->inputs_num; ++i)
@@ -195,6 +202,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "version", 0, 0 );
   if (args_info->stringIDs_given)
     write_into_file(outfile, "stringIDs", 0, 0 );
+  if (args_info->max_degree_given)
+    write_into_file(outfile, "max_degree", args_info->max_degree_orig, 0);
   
 
   i = EXIT_SUCCESS;
@@ -358,10 +367,24 @@ int update_arg(void *field, char **orig_field,
   case ARG_FLAG:
     *((int *)field) = !*((int *)field);
     break;
+  case ARG_INT:
+    if (val) *((int *)field) = strtol (val, &stop_char, 0);
+    break;
   default:
     break;
   };
 
+  /* check numeric conversion */
+  switch(arg_type) {
+  case ARG_INT:
+    if (val && !(stop_char && *stop_char == '\0')) {
+      fprintf(stderr, "%s: invalid numeric value: %s\n", package_name, val);
+      return 1; /* failure */
+    }
+    break;
+  default:
+    ;
+  };
 
   /* store the original value */
   switch(arg_type) {
@@ -423,6 +446,7 @@ cmdline_parser_internal (int argc, char * const *argv, struct gengetopt_args_inf
         { "help",	0, NULL, 'h' },
         { "version",	0, NULL, 'V' },
         { "stringIDs",	0, NULL, 0 },
+        { "max_degree",	1, NULL, 0 },
         { NULL,	0, NULL, 0 }
       };
 
@@ -452,6 +476,20 @@ cmdline_parser_internal (int argc, char * const *argv, struct gengetopt_args_inf
             if (update_arg((void *)&(args_info->stringIDs_flag), 0, &(args_info->stringIDs_given),
                 &(local_args_info.stringIDs_given), optarg, 0, 0, ARG_FLAG,
                 check_ambiguity, override, 1, 0, "stringIDs", '-',
+                additional_error))
+              goto failure;
+          
+          }
+          /* *delete* nodes with too high a degree.  */
+          else if (strcmp (long_options[option_index].name, "max_degree") == 0)
+          {
+          
+          
+            if (update_arg( (void *)&(args_info->max_degree_arg), 
+                 &(args_info->max_degree_orig), &(args_info->max_degree_given),
+                &(local_args_info.max_degree_given), optarg, 0, "-1", ARG_INT,
+                check_ambiguity, override, 0, 0,
+                "max_degree", '-',
                 additional_error))
               goto failure;
           

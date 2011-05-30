@@ -36,10 +36,14 @@ struct gengetopt_args_info
   const char *version_help; /**< @brief Print version and exit help description.  */
   int stringIDs_flag;	/**< @brief string IDs in the input (default=off).  */
   const char *stringIDs_help; /**< @brief string IDs in the input help description.  */
+  int max_degree_arg;	/**< @brief *delete* nodes with too high a degree (default='-1').  */
+  char * max_degree_orig;	/**< @brief *delete* nodes with too high a degree original value given at command line.  */
+  const char *max_degree_help; /**< @brief *delete* nodes with too high a degree help description.  */
   
   unsigned int help_given ;	/**< @brief Whether help was given.  */
   unsigned int version_given ;	/**< @brief Whether version was given.  */
   unsigned int stringIDs_given ;	/**< @brief Whether stringIDs was given.  */
+  unsigned int max_degree_given ;	/**< @brief Whether max_degree was given.  */
 
   char **inputs ; /**< @brief unamed options (options without names) */
   unsigned inputs_num ; /**< @brief unamed options number */

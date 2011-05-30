@@ -2,6 +2,7 @@ package "filter_nodes_and_edges"
 version "0.5"
 purpose "Filters an edge-list of a network"
 option  "stringIDs"          - "string IDs in the input"             flag       off
+option  "max_degree"         - "*delete* nodes with too high a degree"               int        default="-1" no
 #option  "k"                  k "minimum size of clique, k. Must be at least 3."               int        default="3" no
 # option  "git-version"        - "detailed version description"        flag       off
 # option  "verbose"            v "detailed debugging"                  flag       off
