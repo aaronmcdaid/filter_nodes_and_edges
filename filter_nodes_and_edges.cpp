@@ -1,7 +1,10 @@
 #include "cmdline.h"
 #include <iostream>
 #include <cstdlib>
+#include <memory>
 #include "pp.hpp"
+// #include "graph/network.hpp"
+#include "graph/loading.hpp"
 
 using namespace std;
 
@@ -18,6 +21,13 @@ int main(int argc, char **argv) {
 	}
 
 	const char * edgeListFileName   = args_info.inputs[0];
-	cout << "filter_nodes_and_edges: nothing implemented yet" << endl;
 	PP(edgeListFileName);
+
+        std :: auto_ptr<graph :: NetworkInterfaceConvertedToString > network;
+	if(args_info.stringIDs_flag) {
+		network	= graph :: loading :: make_Network_from_edge_list_string(edgeListFileName, 0, 0);
+	} else {
+		network	= graph :: loading :: make_Network_from_edge_list_int64(edgeListFileName, 0, 0);
+	}
+	PP2(network->numNodes(), network->numRels());
 }

@@ -34,9 +34,12 @@ struct gengetopt_args_info
 {
   const char *help_help; /**< @brief Print help and exit help description.  */
   const char *version_help; /**< @brief Print version and exit help description.  */
+  int stringIDs_flag;	/**< @brief string IDs in the input (default=off).  */
+  const char *stringIDs_help; /**< @brief string IDs in the input help description.  */
   
   unsigned int help_given ;	/**< @brief Whether help was given.  */
   unsigned int version_given ;	/**< @brief Whether version was given.  */
+  unsigned int stringIDs_given ;	/**< @brief Whether stringIDs was given.  */
 
   char **inputs ; /**< @brief unamed options (options without names) */
   unsigned inputs_num ; /**< @brief unamed options number */

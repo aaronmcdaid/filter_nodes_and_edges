@@ -1,8 +1,8 @@
 package "filter_nodes_and_edges"
 version "0.5"
 purpose "Filters an edge-list of a network"
+option  "stringIDs"          - "string IDs in the input"             flag       off
 #option  "k"                  k "minimum size of clique, k. Must be at least 3."               int        default="3" no
-#option  "stringIDs"          - "string IDs in the input"             flag       off
 # option  "git-version"        - "detailed version description"        flag       off
 # option  "verbose"            v "detailed debugging"                  flag       off
 # option  "K"                  K "Number of clusters, K"               int        default="-1" no
