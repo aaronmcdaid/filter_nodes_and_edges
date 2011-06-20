@@ -25,13 +25,14 @@ int main(int argc, char **argv) {
 
 	const char * edgeListFileName   = args_info.inputs[0];
 	const char * output_file_name   = args_info.inputs[1];
+	const bool flag_skiploops = false;
 	PP2(edgeListFileName, output_file_name);
 
         std :: auto_ptr<graph :: NetworkInterfaceConvertedToString > network;
 	if(args_info.stringIDs_flag) {
-		network	= graph :: loading :: make_Network_from_edge_list_string(edgeListFileName, 0, 0);
+		network	= graph :: loading :: make_Network_from_edge_list_string(edgeListFileName, 0, 0, flag_skiploops);
 	} else {
-		network	= graph :: loading :: make_Network_from_edge_list_int64(edgeListFileName, 0, 0);
+		network	= graph :: loading :: make_Network_from_edge_list_int64(edgeListFileName, 0, 0, flag_skiploops, 0);
 	}
 	PP2(network->numNodes(), network->numRels());
 	const graph :: VerySimpleGraphInterface * const vsg = network->get_plain_graph();
