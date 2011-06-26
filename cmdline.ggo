@@ -1,8 +1,11 @@
 package "filter_nodes_and_edges"
 version "0.5"
 purpose "Filters an edge-list of a network"
+usage "filter_nodes_and_edges [OPTIONS]... edge_list_input edge_list_output"
 option  "stringIDs"          - "string IDs in the input"             flag       off
 option  "max_degree"         - "*delete* nodes with too high a degree"               int        default="-1" no
+option  "renumber"           - "renumber from 0 to N-1"        flag       off
+option  "skip_self_loops"    - "completely ignore self loops in input"        flag       off
 #option  "k"                  k "minimum size of clique, k. Must be at least 3."               int        default="3" no
 # option  "git-version"        - "detailed version description"        flag       off
 # option  "verbose"            v "detailed debugging"                  flag       off

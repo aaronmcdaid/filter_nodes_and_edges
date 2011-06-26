@@ -39,11 +39,17 @@ struct gengetopt_args_info
   int max_degree_arg;	/**< @brief *delete* nodes with too high a degree (default='-1').  */
   char * max_degree_orig;	/**< @brief *delete* nodes with too high a degree original value given at command line.  */
   const char *max_degree_help; /**< @brief *delete* nodes with too high a degree help description.  */
+  int renumber_flag;	/**< @brief renumber from 0 to N-1 (default=off).  */
+  const char *renumber_help; /**< @brief renumber from 0 to N-1 help description.  */
+  int skip_self_loops_flag;	/**< @brief completely ignore self loops in input (default=off).  */
+  const char *skip_self_loops_help; /**< @brief completely ignore self loops in input help description.  */
   
   unsigned int help_given ;	/**< @brief Whether help was given.  */
   unsigned int version_given ;	/**< @brief Whether version was given.  */
   unsigned int stringIDs_given ;	/**< @brief Whether stringIDs was given.  */
   unsigned int max_degree_given ;	/**< @brief Whether max_degree was given.  */
+  unsigned int renumber_given ;	/**< @brief Whether renumber was given.  */
+  unsigned int skip_self_loops_given ;	/**< @brief Whether skip_self_loops was given.  */
 
   char **inputs ; /**< @brief unamed options (options without names) */
   unsigned inputs_num ; /**< @brief unamed options number */

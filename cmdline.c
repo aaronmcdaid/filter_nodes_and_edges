@@ -23,15 +23,17 @@
 
 const char *gengetopt_args_info_purpose = "Filters an edge-list of a network";
 
-const char *gengetopt_args_info_usage = "Usage: filter_nodes_and_edges [OPTIONS]... [FILES]...";
+const char *gengetopt_args_info_usage = "Usage: filter_nodes_and_edges [OPTIONS]... edge_list_input edge_list_output";
 
 const char *gengetopt_args_info_description = "";
 
 const char *gengetopt_args_info_help[] = {
-  "  -h, --help            Print help and exit",
-  "  -V, --version         Print version and exit",
-  "      --stringIDs       string IDs in the input  (default=off)",
-  "      --max_degree=INT  *delete* nodes with too high a degree  (default=`-1')",
+  "  -h, --help             Print help and exit",
+  "  -V, --version          Print version and exit",
+  "      --stringIDs        string IDs in the input  (default=off)",
+  "      --max_degree=INT   *delete* nodes with too high a degree  (default=`-1')",
+  "      --renumber         renumber from 0 to N-1  (default=off)",
+  "      --skip_self_loops  completely ignore self loops in input  (default=off)",
     0
 };
 
@@ -60,6 +62,8 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->version_given = 0 ;
   args_info->stringIDs_given = 0 ;
   args_info->max_degree_given = 0 ;
+  args_info->renumber_given = 0 ;
+  args_info->skip_self_loops_given = 0 ;
 }
 
 static
@@ -68,6 +72,8 @@ void clear_args (struct gengetopt_args_info *args_info)
   args_info->stringIDs_flag = 0;
   args_info->max_degree_arg = -1;
   args_info->max_degree_orig = NULL;
+  args_info->renumber_flag = 0;
+  args_info->skip_self_loops_flag = 0;
   
 }
 
@@ -80,6 +86,8 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->version_help = gengetopt_args_info_help[1] ;
   args_info->stringIDs_help = gengetopt_args_info_help[2] ;
   args_info->max_degree_help = gengetopt_args_info_help[3] ;
+  args_info->renumber_help = gengetopt_args_info_help[4] ;
+  args_info->skip_self_loops_help = gengetopt_args_info_help[5] ;
   
 }
 
@@ -204,6 +212,10 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "stringIDs", 0, 0 );
   if (args_info->max_degree_given)
     write_into_file(outfile, "max_degree", args_info->max_degree_orig, 0);
+  if (args_info->renumber_given)
+    write_into_file(outfile, "renumber", 0, 0 );
+  if (args_info->skip_self_loops_given)
+    write_into_file(outfile, "skip_self_loops", 0, 0 );
   
 
   i = EXIT_SUCCESS;
@@ -447,6 +459,8 @@ cmdline_parser_internal (int argc, char * const *argv, struct gengetopt_args_inf
         { "version",	0, NULL, 'V' },
         { "stringIDs",	0, NULL, 0 },
         { "max_degree",	1, NULL, 0 },
+        { "renumber",	0, NULL, 0 },
+        { "skip_self_loops",	0, NULL, 0 },
         { NULL,	0, NULL, 0 }
       };
 
@@ -490,6 +504,30 @@ cmdline_parser_internal (int argc, char * const *argv, struct gengetopt_args_inf
                 &(local_args_info.max_degree_given), optarg, 0, "-1", ARG_INT,
                 check_ambiguity, override, 0, 0,
                 "max_degree", '-',
+                additional_error))
+              goto failure;
+          
+          }
+          /* renumber from 0 to N-1.  */
+          else if (strcmp (long_options[option_index].name, "renumber") == 0)
+          {
+          
+          
+            if (update_arg((void *)&(args_info->renumber_flag), 0, &(args_info->renumber_given),
+                &(local_args_info.renumber_given), optarg, 0, 0, ARG_FLAG,
+                check_ambiguity, override, 1, 0, "renumber", '-',
+                additional_error))
+              goto failure;
+          
+          }
+          /* completely ignore self loops in input.  */
+          else if (strcmp (long_options[option_index].name, "skip_self_loops") == 0)
+          {
+          
+          
+            if (update_arg((void *)&(args_info->skip_self_loops_flag), 0, &(args_info->skip_self_loops_given),
+                &(local_args_info.skip_self_loops_given), optarg, 0, 0, ARG_FLAG,
+                check_ambiguity, override, 1, 0, "skip_self_loops", '-',
                 additional_error))
               goto failure;
           

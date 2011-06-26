@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
 
 	const char * edgeListFileName   = args_info.inputs[0];
 	const char * output_file_name   = args_info.inputs[1];
-	const bool flag_skiploops = false;
+	const bool flag_skiploops = args_info.skip_self_loops_flag;
 	PP2(edgeListFileName, output_file_name);
 
         std :: auto_ptr<graph :: NetworkInterfaceConvertedToString > network;
@@ -52,9 +52,13 @@ int main(int argc, char **argv) {
 		const int32_t degree_1 = vsg->degree(node_id_1);
 		const int32_t degree_2 = vsg->degree(node_id_2);
 		if(degree_1 <= max_allowed_degree && degree_2 <= max_allowed_degree) {
-			const string name_1 = network->node_name_as_string(node_id_1);
-			const string name_2 = network->node_name_as_string(node_id_2);
-			f << name_1 << "\t" << name_2 << endl;
+			if(args_info.renumber_flag) {
+				f << node_id_1 << "\t" << node_id_2 << endl;
+			} else {
+				const string name_1 = network->node_name_as_string(node_id_1);
+				const string name_2 = network->node_name_as_string(node_id_2);
+				f << name_1 << "\t" << name_2 << endl;
+			}
 		}
 	}
 
